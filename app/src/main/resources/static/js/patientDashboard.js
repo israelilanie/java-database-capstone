@@ -132,5 +132,5 @@ window.loginPatient = async function () {
     console.log("Error :: loginPatient :: ", error)
   }
 
-
+  
 }
