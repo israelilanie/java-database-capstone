@@ -1,4 +1,4 @@
-package com.project.back_end.service;
+package com.project.back_end.services;
 
 import com.project.back_end.dto.Login;
 import com.project.back_end.models.Admin;
@@ -10,13 +10,12 @@ import com.project.back_end.repo.PatientRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@Service
+@org.springframework.stereotype.Service
 public class Service {
 
     private final TokenService tokenService;
@@ -77,7 +76,42 @@ public class Service {
     // Filter Doctors
     // ---------------------------------------------------
     public Map<String, Object> filterDoctor(String name, String specialty, String time) {
-        return doctorService.filterDoctorsByNameSpecilityandTime(name, specialty, time);
+        String normalizedName = name != null && !name.isBlank() ? name : null;
+        String normalizedSpecialty = specialty != null && !specialty.isBlank() ? specialty : null;
+        String normalizedTime = time != null && !time.isBlank() ? time : null;
+
+        if (normalizedName == null && normalizedSpecialty == null && normalizedTime == null) {
+            var doctors = doctorService.getDoctors();
+            return Map.of("doctors", doctors, "count", doctors.size());
+        }
+
+        if (normalizedName != null && normalizedSpecialty != null && normalizedTime != null) {
+            return doctorService.filterDoctorsByNameSpecilityandTime(
+                    normalizedName, normalizedSpecialty, normalizedTime
+            );
+        }
+
+        if (normalizedName != null && normalizedSpecialty != null) {
+            return doctorService.filterDoctorByNameAndSpecility(normalizedName, normalizedSpecialty);
+        }
+
+        if (normalizedName != null && normalizedTime != null) {
+            return doctorService.filterDoctorByNameAndTime(normalizedName, normalizedTime);
+        }
+
+        if (normalizedSpecialty != null && normalizedTime != null) {
+            return doctorService.filterDoctorByTimeAndSpecility(normalizedSpecialty, normalizedTime);
+        }
+
+        if (normalizedName != null) {
+            return doctorService.findDoctorByName(normalizedName);
+        }
+
+        if (normalizedSpecialty != null) {
+            return doctorService.filterDoctorBySpecility(normalizedSpecialty);
+        }
+
+        return doctorService.filterDoctorsByTime(normalizedTime);
     }
 
     // ---------------------------------------------------

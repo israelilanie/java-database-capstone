@@ -1,4 +1,4 @@
-package com.project.back_end.service;
+package com.project.back_end.services;
 
 import com.project.back_end.repo.AdminRepository;
 import com.project.back_end.repo.DoctorRepository;
@@ -66,17 +66,47 @@ public class TokenService {
                 .compact();
     }
 
+    public String generateDoctorToken(Long doctorId) {
+        return generateToken(String.valueOf(doctorId));
+    }
+
     // ---------------------------------------------------
     // Extract Identifier (Subject) from Token
     // ---------------------------------------------------
     public String extractIdentifier(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(signingKey)
+        Claims claims = Jwts.parser()
+                .verifyWith(signingKey)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
 
         return claims.getSubject();
+    }
+
+    public String extractEmail(String token) {
+        return extractIdentifier(token);
+    }
+
+    public Long extractPatientId(String token) {
+        String email = extractIdentifier(token);
+        if (email == null) {
+            return null;
+        }
+        return Optional.ofNullable(patientRepository.findByEmail(email))
+                .map(patient -> patient.getId())
+                .orElse(null);
+    }
+
+    public Long extractDoctorId(String token) {
+        String identifier = extractIdentifier(token);
+        if (identifier == null) {
+            return null;
+        }
+        try {
+            return Long.parseLong(identifier);
+        } catch (NumberFormatException ex) {
+            return null;
+        }
     }
 
     // ---------------------------------------------------
@@ -90,7 +120,8 @@ public class TokenService {
                 case "admin":
                     return adminRepository.findByUsername(identifier) != null;
                 case "doctor":
-                    return doctorRepository.findByEmail(identifier) != null;
+                    Long doctorId = extractDoctorId(token);
+                    return doctorId != null && doctorRepository.existsById(doctorId);
                 case "patient":
                     return patientRepository.findByEmail(identifier) != null;
                 default:

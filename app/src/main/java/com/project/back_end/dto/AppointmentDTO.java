@@ -1,6 +1,10 @@
 
 package com.project.back_end.dto;
 
+import com.project.back_end.models.Appointment;
+import com.project.back_end.models.Doctor;
+import com.project.back_end.models.Patient;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -41,6 +45,34 @@ public class AppointmentDTO {
         this.appointmentDate = appointmentTime.toLocalDate();
         this.appointmentTimeOnly = appointmentTime.toLocalTime();
         this.endTime = appointmentTime.plusHours(1);
+    }
+
+    public AppointmentDTO(Appointment appointment) {
+        this.id = appointment.getId();
+
+        Doctor doctor = appointment.getDoctor();
+        if (doctor != null) {
+            this.doctorId = doctor.getId();
+            this.doctorName = doctor.getName();
+        }
+
+        Patient patient = appointment.getPatient();
+        if (patient != null) {
+            this.patientId = patient.getId();
+            this.patientName = patient.getName();
+            this.patientEmail = patient.getEmail();
+            this.patientPhone = patient.getPhone();
+            this.patientAddress = patient.getAddress();
+        }
+
+        this.appointmentTime = appointment.getAppointmentTime();
+        this.status = appointment.getStatus();
+
+        if (this.appointmentTime != null) {
+            this.appointmentDate = appointmentTime.toLocalDate();
+            this.appointmentTimeOnly = appointmentTime.toLocalTime();
+            this.endTime = appointmentTime.plusHours(1);
+        }
     }
 
     // Getters for each field
