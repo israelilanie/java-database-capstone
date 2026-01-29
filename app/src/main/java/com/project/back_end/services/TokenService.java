@@ -75,9 +75,11 @@ public class TokenService {
     // ---------------------------------------------------
     public String extractIdentifier(String token) {
         Claims claims = Jwts.parser()
-                .setSigningKey(signingKey)
-                .parseClaimsJws(token)
-                .getBody();
+
+                .verifyWith(signingKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
 
         return claims.getSubject();
     }
