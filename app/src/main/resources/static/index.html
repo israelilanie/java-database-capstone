@@ -47,15 +47,15 @@ and triggers modal-based login functionality.
                     <h2>Select Your Role</h2>
 
                     <div class="role-buttons">
-                        <button id="adminBtn" onclick="selectRole('ADMIN')">
+                        <button id="adminBtn">
                             Admin
                         </button>
 
-                        <button id="doctorBtn" onclick="selectRole('DOCTOR')">
+                        <button id="doctorBtn">
                             Doctor
                         </button>
 
-                        <button id="patientBtn" onclick="selectRole('PATIENT')">
+                        <button id="patientBtn">
                             Patient
                         </button>
                     </div>
@@ -70,5 +70,13 @@ and triggers modal-based login functionality.
 
     <!-- Page-specific logic -->
     <script type="module" src="./js/services/index.js" defer></script>
+
+    <!-- Login modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
 </body>
 </html>

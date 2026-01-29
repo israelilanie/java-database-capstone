@@ -1,8 +1,9 @@
 package com.project.back_end.mvc;
 
+import com.project.back_end.services.Service;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -14,17 +15,17 @@ public class DashboardController {
 
     @GetMapping("/adminDashboard/{token}")
     public String adminDashboard(@PathVariable String token){
-        if(service.validateToken(token,"admin").isEmpty)
+        if (service.validateToken(token, "admin").getStatusCode().is2xxSuccessful()) {
             return "admin/adminDashboard";
-        else
-            return "http://localhost:8080";
+        }
+        return "redirect:/";
     }
     @GetMapping("/doctorDashboard/{token}")
     public String doctorDashboard(@PathVariable String token){
-        if(service.validateToken(token,"doctor").isEmpty)
+        if (service.validateToken(token, "doctor").getStatusCode().is2xxSuccessful()) {
             return "doctor/doctorDashboard";
-        else
-            return "redirect:http://localhost:8080";
+        }
+        return "redirect:/";
     }
 
 

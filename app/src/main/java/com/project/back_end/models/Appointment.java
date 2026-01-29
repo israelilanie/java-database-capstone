@@ -65,6 +65,14 @@ public class Appointment {
         this.patient = patient;
     }
 
+    public LocalDateTime getAppointmentTime() {
+        return appointmentTime;
+    }
+
+    public void setAppointmentTime(LocalDateTime appointmentTime) {
+        this.appointmentTime = appointmentTime;
+    }
+
     public int getStatus() {
         return status;
     }

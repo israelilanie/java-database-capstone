@@ -9,11 +9,30 @@ import { openModal } from './components/modals.js';
 import { getDoctors, filterDoctors, saveDoctor } from './services/doctorServices.js';
 import { createDoctorCard } from './components/doctorCard.js';
 
-// Attach click listener to "Add Doctor" button
-document.getElementById('addDocBtn').addEventListener('click', () => openModal('addDoctor'));
+// Load doctor cards and attach listeners when DOM is ready
+window.addEventListener('DOMContentLoaded', () => {
+  const addDocBtn = document.getElementById('addDocBtn');
+  if (addDocBtn) {
+    addDocBtn.addEventListener('click', () => openModal('addDoctor'));
+  }
 
-// Load doctor cards when DOM is fully loaded
-window.addEventListener('DOMContentLoaded', loadDoctorCards);
+  const searchBar = document.getElementById('searchBar');
+  if (searchBar) {
+    searchBar.addEventListener('input', filterDoctorsOnChange);
+  }
+
+  const timeFilter = document.getElementById('timeFilter');
+  if (timeFilter) {
+    timeFilter.addEventListener('change', filterDoctorsOnChange);
+  }
+
+  const specialtyFilter = document.getElementById('specialtyFilter');
+  if (specialtyFilter) {
+    specialtyFilter.addEventListener('change', filterDoctorsOnChange);
+  }
+
+  loadDoctorCards();
+});
 
 async function loadDoctorCards() {
   try {
@@ -40,16 +59,11 @@ function renderDoctorCards(doctors) {
   });
 }
 
-// Attach search and filter listeners
-document.getElementById('searchBar').addEventListener('input', filterDoctorsOnChange);
-document.getElementById('filterTime').addEventListener('change', filterDoctorsOnChange);
-document.getElementById('filterSpecialty').addEventListener('change', filterDoctorsOnChange);
-
 async function filterDoctorsOnChange() {
   try {
-    const name = document.getElementById('searchBar').value || null;
-    const time = document.getElementById('filterTime').value || null;
-    const specialty = document.getElementById('filterSpecialty').value || null;
+    const name = document.getElementById('searchBar')?.value || null;
+    const time = document.getElementById('timeFilter')?.value || null;
+    const specialty = document.getElementById('specialtyFilter')?.value || null;
 
     const doctors = await filterDoctors(name, time, specialty);
 
@@ -71,7 +85,7 @@ export async function adminAddDoctor() {
   const email = document.getElementById('doctorEmail').value;
   const phone = document.getElementById('doctorPhone').value;
   const password = document.getElementById('doctorPassword').value;
-  const specialty = document.getElementById('doctorSpecialty').value;
+  const specialty = document.getElementById('specialization').value;
 
   const availabilityCheckboxes = document.querySelectorAll('input[name="availability"]:checked');
   const availability = Array.from(availabilityCheckboxes).map(cb => cb.value);
@@ -88,8 +102,7 @@ export async function adminAddDoctor() {
     const result = await saveDoctor(doctor, token);
     if (result.success) {
       alert('Doctor added successfully!');
-      document.getElementById('addDoctorForm').reset();
-      // Close modal if using a modal library, e.g., closeModal('addDoctor');
+      document.getElementById('modal').style.display = 'none';
       loadDoctorCards();
     } else {
       alert('Failed to add doctor: ' + result.message);
@@ -99,3 +112,5 @@ export async function adminAddDoctor() {
     alert('An unexpected error occurred.');
   }
 }
+
+window.adminAddDoctor = adminAddDoctor;
