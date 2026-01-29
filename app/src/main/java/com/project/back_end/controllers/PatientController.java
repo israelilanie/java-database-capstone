@@ -1,9 +1,9 @@
-package com.project.back_end.controller;
+package com.project.back_end.controllers;
 
-import com.project.back_end.model.Patient;
-import com.project.back_end.model.Login;
-import com.project.back_end.service.PatientService;
-import com.project.back_end.service.Service;
+import com.project.back_end.dto.Login;
+import com.project.back_end.models.Patient;
+import com.project.back_end.services.PatientService;
+import com.project.back_end.services.Service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,14 +72,19 @@ public class PatientController {
     // ---------------------------------------------------
     // Get Patient Appointments
     // ---------------------------------------------------
-    @GetMapping("/{id}/{token}")
+    @GetMapping("/{id}/{user}/{token}")
     public ResponseEntity<Map<String, Object>> getPatientAppointments(
             @PathVariable Long id,
+            @PathVariable String user,
             @PathVariable String token) {
 
-        ResponseEntity<Map<String, String>> validation = service.validateToken(token, "patient");
+        ResponseEntity<Map<String, String>> validation = service.validateToken(token, user);
         if (!validation.getStatusCode().is2xxSuccessful()) {
             return new ResponseEntity(validation.getBody(), validation.getStatusCode());
+        }
+
+        if ("doctor".equalsIgnoreCase(user)) {
+            return patientService.getPatientAppointmentForDoctor(id);
         }
 
         return patientService.getPatientAppointment(id, token);

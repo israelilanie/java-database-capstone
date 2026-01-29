@@ -120,7 +120,11 @@ function renderHeader() {
 function attachHeaderButtonListeners() {
   const addDocBtn = document.getElementById("addDocBtn");
   if (addDocBtn) {
-    addDocBtn.addEventListener("click", () => openModal("addDoctor"));
+    addDocBtn.addEventListener("click", () => {
+      if (typeof openModal === "function") {
+        openModal("addDoctor");
+      }
+    });
   }
 
   const logoutBtn = document.getElementById("logoutBtn");
@@ -135,12 +139,20 @@ function attachHeaderButtonListeners() {
 
   const patientLogin = document.getElementById("patientLogin");
   if (patientLogin) {
-    patientLogin.addEventListener("click", () => openModal("patientLogin"));
+    patientLogin.addEventListener("click", () => {
+      if (typeof openModal === "function") {
+        openModal("patientLogin");
+      }
+    });
   }
 
   const patientSignup = document.getElementById("patientSignup");
   if (patientSignup) {
-    patientSignup.addEventListener("click", () => openModal("patientSignup"));
+    patientSignup.addEventListener("click", () => {
+      if (typeof openModal === "function") {
+        openModal("patientSignup");
+      }
+    });
   }
 
   const homeBtn = document.getElementById("home");
@@ -160,7 +172,10 @@ function attachHeaderButtonListeners() {
   const doctorHome = document.getElementById("doctorHome");
   if (doctorHome) {
     doctorHome.addEventListener("click", () => {
-      window.location.href = "/doctor/doctorDashboard.html";
+      const token = localStorage.getItem("token");
+      if (token) {
+        window.location.href = `/doctorDashboard/${token}`;
+      }
     });
   }
 }
