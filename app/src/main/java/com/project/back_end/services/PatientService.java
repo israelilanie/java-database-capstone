@@ -1,11 +1,10 @@
-package com.project.back_end.service;
+package com.project.back_end.services;
 
 import com.project.back_end.dto.AppointmentDTO;
 import com.project.back_end.models.Appointment;
 import com.project.back_end.models.Patient;
 import com.project.back_end.repo.AppointmentRepository;
 import com.project.back_end.repo.PatientRepository;
-import com.project.back_end.security.TokenService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +62,25 @@ public class PatientService {
 
         List<Appointment> appointments =
                 appointmentRepository.findByPatientId(id);
+
+        List<AppointmentDTO> appointmentDTOS = appointments.stream()
+                .map(AppointmentDTO::new)
+                .collect(Collectors.toList());
+
+        response.put("appointments", appointmentDTOS);
+        response.put("count", appointmentDTOS.size());
+
+        return ResponseEntity.ok(response);
+    }
+
+    // ---------------------------------------------------
+    // Get Patient Appointments (Doctor View)
+    // ---------------------------------------------------
+    @Transactional(readOnly = true)
+    public ResponseEntity<Map<String, Object>> getPatientAppointmentForDoctor(Long id) {
+        Map<String, Object> response = new HashMap<>();
+
+        List<Appointment> appointments = appointmentRepository.findByPatientId(id);
 
         List<AppointmentDTO> appointmentDTOS = appointments.stream()
                 .map(AppointmentDTO::new)
