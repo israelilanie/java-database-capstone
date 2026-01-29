@@ -1,9 +1,9 @@
-package com.project.back_end.controller;
+package com.project.back_end.controllers;
 
-import com.project.back_end.model.Doctor;
-import com.project.back_end.model.Login;
-import com.project.back_end.service.DoctorService;
-import com.project.back_end.service.Service;
+import com.project.back_end.dto.Login;
+import com.project.back_end.models.Doctor;
+import com.project.back_end.services.DoctorService;
+import com.project.back_end.services.Service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -152,13 +152,13 @@ public class DoctorController {
     // ---------------------------------------------------
     // Filter Doctors
     // ---------------------------------------------------
-    @GetMapping("/filter/{name}/{time}/{speciality}")
+    @GetMapping("/filter")
     public ResponseEntity<Map<String, Object>> filterDoctors(
-            @PathVariable String name,
-            @PathVariable String time,
-            @PathVariable String speciality) {
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String time,
+            @RequestParam(required = false) String specialty) {
 
-        Map<String, Object> filteredDoctors = service.filterDoctor(name, speciality, time);
+        Map<String, Object> filteredDoctors = service.filterDoctor(name, specialty, time);
         return ResponseEntity.ok(filteredDoctors);
     }
 }

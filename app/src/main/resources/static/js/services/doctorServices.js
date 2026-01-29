@@ -23,9 +23,9 @@ export async function getDoctors() {
 // Delete a specific doctor by ID (Admin only)
 export async function deleteDoctor(id, token) {
   try {
-    const response = await fetch(`${DOCTOR_API}/${id}`, {
+    const response = await fetch(`${DOCTOR_API}/${id}/${token}`, {
       method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Content-Type': 'application/json' }
     });
     const data = await response.json();
     return { success: response.ok, message: data.message || '' };
@@ -38,11 +38,10 @@ export async function deleteDoctor(id, token) {
 // Save (create) a new doctor (Admin only)
 export async function saveDoctor(doctor, token) {
   try {
-    const response = await fetch(DOCTOR_API, {
+    const response = await fetch(`${DOCTOR_API}/${token}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(doctor)
     });
