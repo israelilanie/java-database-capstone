@@ -123,7 +123,3 @@ Structured, validated, and interrelated operational data is stored in MySQL. Thi
   "timestamp": "2025-10-01T09:45:00Z"
 }
 ```
-
-**Design decisions:**
-- Keep logs flexible with a `metadata` object for event-specific data.
-- Support auditing and tracing without expanding relational tables.
