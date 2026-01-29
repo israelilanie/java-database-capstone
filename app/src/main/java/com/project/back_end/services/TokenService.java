@@ -74,9 +74,8 @@ public class TokenService {
     // Extract Identifier (Subject) from Token
     // ---------------------------------------------------
     public String extractIdentifier(String token) {
-        Claims claims = Jwts.parserBuilder()
+        Claims claims = Jwts.parser()
                 .setSigningKey(signingKey)
-                .build()
                 .parseClaimsJws(token)
                 .getBody();
 
