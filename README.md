@@ -1,8 +1,18 @@
 # Health Management System (Smart Clinic)
 
+ codex/improve-job-app-tracking-system-pubjjh
+
+A Spring Boot service for tracking job applications end-to-end, with a REST API that captures company details, role information, interview status, follow-ups, and notes. The project still contains legacy clinic-management modules (appointments, doctors, patients, prescriptions) so you can either expand or remove them later.
+
+## ✨ What’s Included
+=======
+A Spring Boot service for tracking job applications end-to-end, with a REST API that captures company details, role information, interview status, follow-ups, and notes. The project also retains the original clinic-management modules (appointments, doctors, patients, prescriptions) so you can evolve or remove them later.
+=======
 A Spring Boot health management system that supports patient onboarding, doctor management, appointment scheduling, and prescription tracking. The application combines REST APIs with MVC dashboards (Thymeleaf) and uses MySQL for structured clinical data plus MongoDB for flexible prescription documents.
+main
 
 ## ✨ Core Features
+ main
 
 - **Patient portal**
   - Patient sign-up and login.
@@ -78,6 +88,58 @@ Use these documents as the canonical references for the project’s architecture
 - **Database schema design**: `schema-design.md`
 - **Product/user stories**: `user_stories.md`
 
+
+#### Application status values
+- `DRAFT`
+- `APPLIED`
+- `INTERVIEWING`
+- `OFFER`
+- `REJECTED`
+- `WITHDRAWN`
+
+## 📚 Documentation
+
+### Data model (JobApplication)
+| Field | Type | Required | Notes |
+| --- | --- | --- | --- |
+| `companyName` | string | ✅ | Employer or company name |
+| `roleTitle` | string | ✅ | Job title / role |
+| `location` | string | ❌ | City / region / remote |
+| `status` | enum | ✅ | See status list above |
+| `appliedDate` | date | ❌ | `YYYY-MM-DD` |
+| `nextStepDate` | date | ❌ | `YYYY-MM-DD` |
+| `source` | string | ❌ | Referral, LinkedIn, etc. |
+| `salaryRange` | string | ❌ | Optional display string |
+| `contactName` | string | ❌ | Recruiter / HM |
+| `contactEmail` | string | ❌ | Email validation enforced |
+| `notes` | string | ❌ | Up to 2000 chars |
+
+### Example curl requests
+Create:
+```bash
+curl -X POST http://localhost:8080/job-applications \
+  -H "Content-Type: application/json" \
+  -d '{
+    "companyName": "OpenAI",
+    "roleTitle": "Software Engineer",
+    "status": "APPLIED"
+  }'
+```
+
+Update status:
+```bash
+curl -X PATCH http://localhost:8080/job-applications/1/status \
+  -H "Content-Type: application/json" \
+  -d '{"status":"INTERVIEWING"}'
+```
+
+List by status:
+```bash
+curl "http://localhost:8080/job-applications?status=APPLIED"
+```
+
+=======
+main
 ## 🚀 Getting Started
 
 ### Prerequisites
