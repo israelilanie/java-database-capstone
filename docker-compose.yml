@@ -1,0 +1,41 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/job_tracker?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: jobtracker
+      SPRING_DATASOURCE_PASSWORD: jobtracker
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_DATA_MONGODB_URI: mongodb://jobtracker:jobtracker@mongo:27017/job_tracker?authSource=admin
+      JWT_SECRET: change-me
+    depends_on:
+      - db
+      - mongo
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: job_tracker
+      MYSQL_USER: jobtracker
+      MYSQL_PASSWORD: jobtracker
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  mongo:
+    image: mongo:7
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: jobtracker
+      MONGO_INITDB_ROOT_PASSWORD: jobtracker
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mysql_data:
+  mongo_data:
