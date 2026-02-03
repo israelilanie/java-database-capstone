@@ -1,8 +1,14 @@
 # Job Application Tracking System
 
+
 A Spring Boot service for tracking job applications end-to-end, with a REST API that captures company details, role information, interview status, follow-ups, and notes. The project still contains legacy clinic-management modules (appointments, doctors, patients, prescriptions) so you can either expand or remove them later.
 
 ## ✨ What’s Included
+=======
+A Spring Boot service for tracking job applications end-to-end, with a REST API that captures company details, role information, interview status, follow-ups, and notes. The project also retains the original clinic-management modules (appointments, doctors, patients, prescriptions) so you can evolve or remove them later.
+
+## ✨ Core Features
+ main
 
 ### Job application tracking
 - Create, update, and delete job applications.
@@ -53,6 +59,7 @@ Status patch:
 }
 ```
 
+
 #### Application status values
 - `DRAFT`
 - `APPLIED`
@@ -102,6 +109,8 @@ List by status:
 curl "http://localhost:8080/job-applications?status=APPLIED"
 ```
 
+=======
+main
 ## 🚀 Getting Started
 
 ### Prerequisites
